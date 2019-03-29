@@ -1,0 +1,19 @@
+div {
+  display: grid;
+    grid-template-columns: 200px 200px 1fr;
+    grid-gap: 16px;
+}
+
+label {
+  grid-column: 1 / 2;
+}
+
+input,
+button {
+    grid-column: 2 / 3;
+}
+
+span{
+  color:red;
+  display: none;
+}
