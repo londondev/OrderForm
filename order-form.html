@@ -1,7 +1,7 @@
 <HTML>
   <header>
       <link rel="stylesheet" href="order-form.css">
-      
+      <h1>Order Form</h1>
   </header>
   <body>
     <div>
@@ -17,15 +17,21 @@
               <option>Ruler</option>
             </select>
 
-            <label for="amount" class="amount">Order Date</label>
+            <label for="amount" class="amount">Order Amount</label>
             <input id="amount" type="number">
 
-            <label for="unitPrice" class="unit-price">Order Date</label>
+            <label for="unitPrice" class="unit-price">Unit Price</label>
             <input id="unitPrice" type="number">
 
-            <label for="totalPrice" class="total-price"></label>
+            <label for="totalPrice" class="total-price">Total</label>
             <input id="totalPrice" readonly=true class="total-price"></label>
 
+            <input type="radio" name="delivery" value="standard">Standard(Free)<br/>
+            <input type="radio" name="delivery" value="fast">Fast(£2.99)<br/>
+            <input type="radio" name="delivery" value="express">Express(£4.99)<br/>
+            
+            <label for="totalAll" class="total-price-all">Total Include Delivery</label>
+            <input id="totalAll" readonly=true class="total-price-all"></label>
             
             <button id='submitOrder'>Submit</button>
         
