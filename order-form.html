@@ -12,23 +12,25 @@
          
             <label for="itemName" class="item-name">Item Name</label>
             <select id="itemN" type="text">
-              <option>Shoes</option>
-              <option>Pen</option>
-              <option>Ruler</option>
+              <option value="5">Shoes</option>
+              <option value="10">Pen</option>
+              <option value="15">Ruler</option>
             </select>
 
             <label for="amount" class="amount">Order Amount</label>
             <input id="amount" type="number">
 
             <label for="unitPrice" class="unit-price">Unit Price</label>
-            <input id="unitPrice" type="number">
+            <input id="unitPrice" readonly=true type="number">
 
             <label for="totalPrice" class="total-price">Total</label>
             <input id="totalPrice" readonly=true class="total-price"></label>
-
-            <input type="radio" name="delivery" value="standard">Standard(Free)<br/>
-            <input type="radio" name="delivery" value="fast">Fast(£2.99)<br/>
-            <input type="radio" name="delivery" value="express">Express(£4.99)<br/>
+            
+            <input type="radio" name="delivery" value="standard" id="standart">Standard(Free)<br />
+            <input type="radio" name="delivery" value="fast" id="fast">Fast(£2.99)<br />
+            <input type="radio" name="delivery" value="express" id="express">Express(£4.99)<br />
+            
+            
             
             <label for="totalAll" class="total-price-all">Total Include Delivery</label>
             <input id="totalAll" readonly=true class="total-price-all"></label>
