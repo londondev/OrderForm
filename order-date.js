@@ -109,7 +109,7 @@ function addDeliveryFeeToTotal() {
   } else {
     deliveryAmount = 4.99;
   }
-  totalAll.value = deliveryAmount + parseInt(totalPriceBox);
+  totalAll.value = (deliveryAmount + Number(totalPriceBox)).toFixed(2);
 }
 
 
