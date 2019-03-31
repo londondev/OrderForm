@@ -50,6 +50,7 @@ function calculateTotalAmount(amountBox, unitPriceBox) {
   totalPriceBox.value = amountBox.value * unitPriceBox.value;
 }
 
+
 function validateDate(date) {
   var checkBoxArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "/", "9"];
   today = new Date();
@@ -90,6 +91,7 @@ function validateDate(date) {
     }
   }
   return true;
+
 }
 
 function addDeliveryFeeToTotal() {
@@ -110,6 +112,7 @@ function addDeliveryFeeToTotal() {
   totalAll.value = (deliveryAmount + Number(totalPriceBox)).toFixed(2);
 }
 
+
 init();
 
 /*validation code :
@@ -121,6 +124,7 @@ init();
   */
 
 /*
+===
     standard ==> 0 add,
     fast ==> 2.99 add,
     express => 4.99 add
