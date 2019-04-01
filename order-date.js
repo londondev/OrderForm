@@ -12,15 +12,15 @@ function init() {
   unitPriceBox.addEventListener("blur", event =>
     calculateTotalAmount(amountBox, unitPriceBox)
   );
-  document
-    .getElementById("standart")
-    .addEventListener("click", addDeliveryFeeToTotal);
-  document
-    .getElementById("fast")
-    .addEventListener("click", addDeliveryFeeToTotal);
-  document
-    .getElementById("express")
-    .addEventListener("click", addDeliveryFeeToTotal);
+
+  var deliveryFeeList = document.getElementsByName("delivery");
+
+  deliveryFeeList.forEach(x =>
+    document
+      .getElementById(x.id)
+      .addEventListener("click", addDeliveryFeeToTotal)
+  );
+
   var orderDateBox = document.getElementById("orderDate");
   orderDateBox.addEventListener("blur", event => orderSubmit(event));
 
@@ -50,14 +50,15 @@ function calculateTotalAmount(amountBox, unitPriceBox) {
   totalPriceBox.value = amountBox.value * unitPriceBox.value;
 }
 
-
 function validateDate(date) {
   var checkBoxArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "/", "9"];
-  today = new Date();
+  var today = new Date();
+  console.log(today);
   var dd = today.getDate();
   var mm = today.getMonth() + 1; //As January is 0.
   var yyyy = today.getFullYear();
   let arr1 = date.split("");
+
   let arr = date.split("/");
   let day = Number(arr[0]);
   let month = Number(arr[1]);
@@ -91,7 +92,6 @@ function validateDate(date) {
     }
   }
   return true;
-
 }
 
 function addDeliveryFeeToTotal() {
@@ -111,7 +111,6 @@ function addDeliveryFeeToTotal() {
   }
   totalAll.value = (deliveryAmount + Number(totalPriceBox)).toFixed(2);
 }
-
 
 init();
 
