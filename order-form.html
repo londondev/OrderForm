@@ -4,14 +4,14 @@
       <h1>Order Form</h1>
   </header>
   <body>
-    <div>
+    <div id="asb">
        
             <label for="orderDate" class="order-date">Order Date</label>
             <input id="orderDate" type="text" placeholder="dd/mm/yyyy">
             <span id='invalidOrderDate'>Invalid Date</span>
          
             <label for="itemName" class="item-name">Item Name</label>
-            <select id="itemN" type="text" value="default">
+            <select id="itemName" type="text" value="default">
               <option value="5">Shoes</option>
               <option value="10">Pen</option>
               <option value="15">Ruler</option>
@@ -39,6 +39,7 @@
             <button id='submitOrder'>Submit</button>
         
     </div>
+    <p id="showData"></p>
   </body>
   <script src="order-date.js"></script>
 </HTML>
