@@ -4,6 +4,7 @@
    fast:2.99,
    express:4.99
  }
+ var orderList=[];
 function init(){
   var orderButton=document.getElementById('submitOrder')
   orderButton.addEventListener('click', (event) => orderSubmit(event));
@@ -90,12 +91,20 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+function createNewOrder(){
+  var newOrder={
+    amount:5,
+    item:'Shoes'
+  }
+
+  orderList.push(newOrder)
+}
+
 /*
   homework:
-  1- Implement validateDate
-  2- Implement addDeliveryFeeToTotal
-  3- Add items to array with each price, when item is selected
-  populate, unit price automatically.
+ 1- On submit, save order to array,
+ 2- Clean order form
+ 3- Order date must be validated on blur
 */
 
 
