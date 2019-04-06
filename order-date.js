@@ -5,9 +5,13 @@
    express:4.99
  }
  var orderList=[];
+ var selectedDeliveryType;
 function init(){
+  var orderDateInput=document.getElementById('orderDate');
+  orderDateInput.addEventListener('blur', validateOrderDate);
+
   var orderButton=document.getElementById('submitOrder')
-  orderButton.addEventListener('click', (event) => orderSubmit(event));
+  orderButton.addEventListener('click', orderSubmit);
 
   var amountBox=document.getElementById('amount');
   var unitPriceBox=document.getElementById('unitPrice');
@@ -29,7 +33,45 @@ function itemSelected(val){
   document.getElementById('unitPrice').value=val;
 }
 
-function orderSubmit(event){
+function orderSubmit(){
+    var newOrder={
+      orderDate:document.getElementById('orderDate').value,
+      itemName:document.getElementById('itemName').value,
+      amount: document.getElementById('amount').value,
+      unitPrice:document.getElementById('unitPrice').value,
+      totalPrice:document.getElementById('totalPrice').value,
+      selectedDeliveryType,
+      totalAll:document.getElementById('totalAll').value
+    }
+    orderList.push(newOrder);
+    cleanForm();
+    renderRow(newOrder);
+}
+
+function cleanForm(){
+  document.getElementById('orderDate').value='',
+  document.getElementById('itemName').value='',
+  document.getElementById('amount').value='',
+  document.getElementById('unitPrice').value='',
+  document.getElementById('totalPrice').value='',
+  document.getElementById('totalAll').value=''
+}
+
+function renderRow(newOrder){
+    var orderTable=document.getElementById('orderTable');
+    var row=orderTable.insertRow(orderList.length);
+    var cellIndex=0;
+    var currentCell;
+ 
+    Object.values(newOrder).forEach(val=>{
+      currentCell=row.insertCell(cellIndex);
+      currentCell.innerHTML=val;
+      cellIndex++;
+    })
+
+}
+
+function validateOrderDate(){
     var orderDateValidation=document.getElementById('invalidOrderDate');
     var dateValue=document.getElementById('orderDate').value;
     if(!isValidOrderDate(dateValue)){
@@ -47,6 +89,7 @@ function calculateTotalAmount(amountBox, unitPriceBox){
 }
 
 function addDeliveryFeeToTotal(deliveryType){
+  selectedDeliveryType=deliveryType;
   var totalAll=document.getElementById('totalAll');
   var totalPriceBox=document.getElementById('totalPrice');
   totalAll.value=(Number(totalPriceBox.value) + Number(deliveryFees[deliveryType])).toFixed(2);
