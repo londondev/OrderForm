@@ -11,10 +11,10 @@
             <span id='invalidOrderDate'>Invalid Date</span>
          
             <label for="itemName" class="item-name">Item Name</label>
-            <select id="itemN" type="text">
-              <option>Shoes</option>
-              <option>Pen</option>
-              <option>Ruler</option>
+            <select id="itemName" type="text">
+              <option value=5>Shoes</option>
+              <option value=3>Pen</option>
+              <option value=2>Ruler</option>
             </select>
 
             <label for="amount" class="amount">Order Amount</label>
@@ -26,7 +26,7 @@
             <label for="totalPrice" class="total-price">Total</label>
             <input id="totalPrice" readonly=true class="total-price"></label>
 
-            <input type="radio" name="delivery" value="standard">Standard(Free)<br/>
+            <input type="radio" name="delivery" value="standard" checked>Standard(Free)<br/>
             <input type="radio" name="delivery" value="fast">Fast(£2.99)<br/>
             <input type="radio" name="delivery" value="express">Express(£4.99)<br/>
             
@@ -35,6 +35,22 @@
             
             <button id='submitOrder'>Submit</button>
         
+    </div>
+
+    <div id='divTable'></div>
+      <table id='orderTable'>
+        
+          <tr>
+          <th>Order Date</th>
+          <th>Item Name</th>
+          <th>Order Amount</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+          <th>Delivery Type</th>
+          <th>Total All</th>
+        </tr>
+      
+      </table>
     </div>
   </body>
   <script src="order-date.js"></script>
