@@ -1,8 +1,8 @@
 div {
   display: grid;
-    grid-template-columns: 200px 200px 1fr;
-    grid-gap: 16px;
-    font-size:16px;
+  grid-template-columns: 200px 200px 1fr;
+  grid-gap: 16px;
+  font-size: 16px;
 }
 
 label {
@@ -11,14 +11,14 @@ label {
 
 input,
 button {
-    grid-column: 2 / 3;
+  grid-column: 2 / 3;
 }
-input{
+input {
   height: 30px;
 }
 
-span{
-  color:red;
+span {
+  color: red;
   display: none;
 }
 
@@ -50,4 +50,8 @@ tfoot {color:red;}
   background-color: #4CAF50;
   color: white;
 }
+tbody tr:nth-child(odd)
+	{
+	  background: rgb(101, 196, 188);
+	}
 
