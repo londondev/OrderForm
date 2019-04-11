@@ -51,3 +51,7 @@ tfoot {color:red;}
   color: white;
 }
 
+#orderTable tr:nth-child(odd){
+  background-color:grey;
+  color: white;
+}

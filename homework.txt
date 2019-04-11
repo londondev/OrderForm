@@ -2,3 +2,10 @@ Homework 06/04/2019
     -when we change itemName, it should update Total and Total Include Delivery
     -Free delivery should be set by default
     -Change the row color of even row in the table
+
+
+Homework 10/04/2019
+    - On submit button, check if the form is populated. If not, give proper error messages.
+    - Add edit button to the table for each row
+    - When user click the edit button, fill the form with the related row
+    - When user change the form and click submit button, update the row in the table

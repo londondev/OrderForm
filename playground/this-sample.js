@@ -1,33 +1,8 @@
-// console.log(this);
+var arr=[1,2,3];
 
-// function a(){
-//     console.log(this);
-// }
-// a();
+var max1=Math.max(...arr);
 
-// var b=function(){
-//     console.log(this);
-//     this.newvariable='hello';
-// }
-// b();
+console.log(max1);
 
-// belongs to global
-// var b=function(){
-//     console.log(this);
-//     this.newvariable='hello';
-// }
 
-// b();
-// console.log(newvariable);
-
-//belongs to object
-var c = {
-    name: 'The c object',
-    log: function(){
-        //++
-        //this.name='Ammended name';
-        console.log(this);
-    }
-}
-
-c.log();
+Math.max.apply(Math, )

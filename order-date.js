@@ -31,10 +31,17 @@ function init(){
 
 function itemSelected(val){
   document.getElementById('unitPrice').value=val;
+
+  var amountBox=document.getElementById('amount');
+  var unitPriceBox=document.getElementById('unitPrice');
+  calculateTotalAmount(amountBox, unitPriceBox);
+
+  addDeliveryFeeToTotal(selectedDeliveryType);
 }
 
 function orderSubmit(){
     var newOrder={
+      orderId: orderList.length===0? 1: Math.max.apply(Math, orderList.map(function(o) { return o.orderId; })) + 1,
       orderDate:document.getElementById('orderDate').value,
       itemName:document.getElementById('itemName').value,
       amount: document.getElementById('amount').value,
@@ -67,8 +74,23 @@ function renderRow(newOrder){
       currentCell=row.insertCell(cellIndex);
       currentCell.innerHTML=val;
       cellIndex++;
-    })
+    });
 
+
+    currentCell=row.insertCell(cellIndex++);
+    currentCell.innerHTML='<button id="btn_' + newOrder.orderId + '" onclick="deleteOrder(' + newOrder.orderId + ')">Delete</button>';
+}
+
+function deleteOrder(orderId){
+   orderList=orderList.filter(o=> o.orderId !== orderId);
+   debugger;
+   var btn=document.getElementById('btn_' + orderId);
+   deleteRow(btn);
+}
+
+function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
 }
 
 function validateOrderDate(){
@@ -92,6 +114,7 @@ function addDeliveryFeeToTotal(deliveryType){
   selectedDeliveryType=deliveryType;
   var totalAll=document.getElementById('totalAll');
   var totalPriceBox=document.getElementById('totalPrice');
+  debugger;
   totalAll.value=(Number(totalPriceBox.value) + Number(deliveryFees[deliveryType])).toFixed(2);
 }
 
@@ -100,7 +123,10 @@ init();
 
 
 function isValidOrderDate(date){
-  return isValidDate(date) && !isPastDate(date);
+  var day=dateParts[0];
+  var month=dateParts[1];
+  var year=dateParts[2];
+  return isValidDate(date) && !isPastDate(year, month, day);
 }
 function isValidDate(date){
  var dateParts=date.split('/');
