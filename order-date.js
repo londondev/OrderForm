@@ -98,6 +98,7 @@ function validateOrderDate(){
     var dateValue=document.getElementById('orderDate').value;
     if(!isValidOrderDate(dateValue)){
       orderDateValidation.style.display='block';  
+      document.getElementById('orderDate').focus();
     }else{
       orderDateValidation.style.display='none'; 
     }   
@@ -114,7 +115,8 @@ function addDeliveryFeeToTotal(deliveryType){
   selectedDeliveryType=deliveryType;
   var totalAll=document.getElementById('totalAll');
   var totalPriceBox=document.getElementById('totalPrice');
-  debugger;
+  if(!totalPriceBox.value)
+    return;
   totalAll.value=(Number(totalPriceBox.value) + Number(deliveryFees[deliveryType])).toFixed(2);
 }
 
@@ -123,6 +125,7 @@ init();
 
 
 function isValidOrderDate(date){
+  var dateParts=date.split('/');
   var day=dateParts[0];
   var month=dateParts[1];
   var year=dateParts[2];
