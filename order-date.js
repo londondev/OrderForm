@@ -6,6 +6,8 @@
  }
  var orderList=[];
  var selectedDeliveryType;
+ var orderIdToEdit=null;
+
 function init(){
   var orderDateInput=document.getElementById('orderDate');
   orderDateInput.addEventListener('blur', validateOrderDate);
@@ -40,6 +42,7 @@ function itemSelected(val){
 }
 
 function orderSubmit(){
+  if(!orderIdToEdit){
     var newOrder={
       orderId: orderList.length===0? 1: Math.max.apply(Math, orderList.map(function(o) { return o.orderId; })) + 1,
       orderDate:document.getElementById('orderDate').value,
@@ -51,8 +54,20 @@ function orderSubmit(){
       totalAll:document.getElementById('totalAll').value
     }
     orderList.push(newOrder);
-    cleanForm();
     renderRow(newOrder);
+  }else{
+    var currentOrder=orderList.find(o=>o.orderId===orderIdToEdit);
+    currentOrder.orderDate=document.getElementById('orderDate').value,
+    currentOrder.itemName=document.getElementById('itemName').value,
+    currentOrder.amount= document.getElementById('amount').value,
+    currentOrder.unitPrice=document.getElementById('unitPrice').value,
+    currentOrder.totalPrice=document.getElementById('totalPrice').value,
+    currentOrder.selectedDeliveryType,
+    currentOrder.totalAll=document.getElementById('totalAll').value;
+    updateRow(currentOrder);
+  }
+    cleanForm();
+    
 }
 
 function cleanForm(){
@@ -61,7 +76,19 @@ function cleanForm(){
   document.getElementById('amount').value='',
   document.getElementById('unitPrice').value='',
   document.getElementById('totalPrice').value='',
-  document.getElementById('totalAll').value=''
+  document.getElementById('totalAll').value='';
+  document.getElementById('standard').checked=true;
+  selectedDeliveryType='standard';
+}
+
+function populateForm(order){
+  document.getElementById('orderDate').value=order.orderDate;
+  document.getElementById('itemName').value=order.itemName;
+  document.getElementById('amount').value=order.amount;
+  document.getElementById('unitPrice').value=order.unitPrice;
+  document.getElementById('totalPrice').value=order.totalPrice;
+  document.getElementById('totalAll').value=order.totalAll;
+  document.getElementById(order.selectedDeliveryType).checked=true;
 }
 
 function renderRow(newOrder){
@@ -75,17 +102,30 @@ function renderRow(newOrder){
       currentCell.innerHTML=val;
       cellIndex++;
     });
-
-
     currentCell=row.insertCell(cellIndex++);
-    currentCell.innerHTML='<button id="btn_' + newOrder.orderId + '" onclick="deleteOrder(' + newOrder.orderId + ')">Delete</button>';
+    currentCell.innerHTML='<button id="btn_delete' + newOrder.orderId + '" onclick="deleteOrder(' + newOrder.orderId + ')">Delete</button>';
+    currentCell=row.insertCell(cellIndex++);
+    currentCell.innerHTML='<button id="btn_edit' + newOrder.orderId + '" onclick="editOrder(' + newOrder.orderId + ')">Edit</button>';
+}
+
+function updateRow(order){
+  var editButon=document.getElementById('btn_edit' + order.orderId);
+  var currentRow=editButon.parentNode.parentNode;
+  Object.values(order).forEach((orderProperty, index) =>{
+    currentRow.cells[index].innerHTML = orderProperty;
+  });
 }
 
 function deleteOrder(orderId){
    orderList=orderList.filter(o=> o.orderId !== orderId);
-   debugger;
-   var btn=document.getElementById('btn_' + orderId);
+   var btn=document.getElementById('btn_delete' + orderId);
    deleteRow(btn);
+}
+
+function editOrder(orderId){
+  var editOrder=orderList.find(o=> o.orderId === orderId);
+  orderIdToEdit=orderId;
+  populateForm(editOrder);
 }
 
 function deleteRow(btn) {
