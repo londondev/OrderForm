@@ -19,6 +19,8 @@ var selectedDeliveryType = function(){
   return result;
 }
 
+var orderIdToEdit=null;
+
 function init(){
   
   var currentDate = new Date().toLocaleDateString();
@@ -31,8 +33,10 @@ function init(){
 
   orderDateBox.addEventListener('focus', function(){
     var orderDateValidation=document.getElementById('invalidOrderDate');
-    if((orderDateBox.value = orderDateValidation.innerHTML)){
-      document.getElementById('orderDate').value = currentDate;
+    if(!orderIdToEdit){
+      if((orderDateBox.value = orderDateValidation.innerHTML)){
+        document.getElementById('orderDate').value = currentDate;
+      }
     }
   })
 
@@ -41,7 +45,35 @@ function init(){
   amountBox.addEventListener('change', (event)=> calculateTotalAmount(amountBox, unitPriceBox, totalPriceBox, totalAllBox, deliveryOptions));
 
   deliveryOptions.forEach(item=>item.addEventListener('click', (event) => addDeliveryFeeToTotal(totalAllBox, totalPriceBox, deliveryOptions)));
-}
+
+  var orderDateBtn = document.getElementById('orderDateBtn');
+  orderDateBtn.addEventListener('click', function(){
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("orderTable");
+    switching = true;
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[1];
+      y = rows[i + 1].getElementsByTagName("TD")[1];
+
+      var date = x.innerHTML.split('/').reverse().join('');
+      var date1 = y.innerHTML.split('/').reverse().join('');
+   
+      if (date1 > date) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+  });
+};
 
 function orderSubmit(event){
     var orderDateValidation=document.getElementById('invalidOrderDate');
@@ -51,37 +83,54 @@ function orderSubmit(event){
     } else{
       orderDateValidation.style.display='none'; 
     }  
-}
+};
 
 function clickSubmit(){
   var orderDateValidation=document.getElementById('invalidOrderDate');
   var dateValue=document.getElementById('orderDate').value;
-  if(!validateDate(dateValue)){
-    orderDateValidation.style.display = 'block';
-  }else if(itemNameBox.value === ""){
-    document.getElementById('item-span').style.display = 'block';
-  }else if(amountBox.value === ""){
-    document.getElementById('item-span').style.display = 'none';
-    document.getElementById('amount-span').style.display = 'block';
-  } else{  
-    document.getElementById('amount-span').style.display = 'none';
-    document.getElementById('item-span').style.display = 'none';
-  var newOrder={
-    orderDate: document.getElementById('orderDate').value,
-    itemName: document.getElementById('itemN').value,
-    amount: document.getElementById('amount').value,
-    unitPrice: document.getElementById('unitPrice').value,
-    totalPrice: document.getElementById('totalPrice').value,
-    selectedDeliveryType: selectedDeliveryType(),
-    totalAll: document.getElementById('totalAll').value
-  }
-  orderList.push(newOrder);
-  cleanForm();
-  renderRow(newOrder);
-  document.getElementById('orderTable').style.display='block';
-}
-}
 
+  if(!orderIdToEdit){
+    if(!validateDate(dateValue)){
+      orderDateValidation.style.display = 'block';
+    }else if(itemNameBox.value === ""){
+      document.getElementById('item-span').style.display = 'block';
+    }else if(amountBox.value === ""){
+      document.getElementById('item-span').style.display = 'none';
+      document.getElementById('amount-span').style.display = 'block';
+    } else{  
+      document.getElementById('amount-span').style.display = 'none';
+      document.getElementById('item-span').style.display = 'none';
+
+    var newOrder={
+      orderId: orderList.length === 0 ? 1: Math.max.apply(Math, orderList.map(function(o) { return o.orderId; })) + 1,
+      orderDate: document.getElementById('orderDate').value,
+      itemName: document.getElementById('itemN').value,
+      amount: document.getElementById('amount').value,
+      unitPrice: document.getElementById('unitPrice').value,
+      totalPrice: document.getElementById('totalPrice').value,
+      selectedDeliveryType: selectedDeliveryType(),
+      totalAll: document.getElementById('totalAll').value
+    }
+    orderList.push(newOrder);
+    renderRow(newOrder);
+    document.getElementById('orderTable').style.display='block';
+    cleanForm();
+  }
+}else{
+  var currentOrder=orderList.find(o=>o.orderId===orderIdToEdit);
+    currentOrder.orderDate=document.getElementById('orderDate').value,
+    currentOrder.itemName=document.getElementById('itemN').value,
+    currentOrder.amount= document.getElementById('amount').value,
+    currentOrder.unitPrice=document.getElementById('unitPrice').value,
+    currentOrder.totalPrice=document.getElementById('totalPrice').value,
+    currentOrder.selectedDeliveryType,
+    currentOrder.totalAll=document.getElementById('totalAll').value;
+    updateRow(currentOrder);
+    orderIdToEdit=null;
+    cleanForm();
+}
+  
+};
 
 function cleanForm(){
   var currentDate = new Date().toLocaleDateString();
@@ -92,7 +141,7 @@ function cleanForm(){
   document.getElementById('totalPrice').value='',
   document.getElementById('totalAll').value='',
   document.getElementsByName('delivery')[0].checked = 'checked'
-}
+};
 
 function renderRow(newOrder){
     var orderTable=document.getElementById('orderTable');
@@ -105,14 +154,53 @@ function renderRow(newOrder){
       currentCell.innerHTML=val;
       cellIndex++;
     })
-}
+
+    currentCell = row.insertCell(cellIndex++);
+    currentCell.innerHTML='<button id="btn_' + newOrder.orderId + '" onclick="deleteOrder(' + newOrder.orderId + ')">X</button>';
+    row.insertCell(cellIndex++).innerHTML='<button id="edit_btn_' + newOrder.orderId + '" onclick="edit(' + newOrder.orderId + ')">Edit</button>';
+};
+
+function populateForm(order){
+  document.getElementById('orderDate').value=order.orderDate;
+  document.getElementById('itemN').value=order.itemName;
+  document.getElementById('amount').value=order.amount;
+  document.getElementById('unitPrice').value=order.unitPrice;
+  document.getElementById('totalPrice').value=order.totalPrice;
+  document.getElementById('totalAll').value=order.totalAll;
+  document.getElementsByName('delivery')[0].checked=true;
+};
+
+function edit(orderId){
+  var editOrder=orderList.find(o=> o.orderId === orderId);
+  orderIdToEdit=orderId;
+  populateForm(editOrder);
+};
+
+function updateRow(order){
+  var editButon=document.getElementById('edit_btn_' + order.orderId);
+  var currentRow=editButon.parentNode.parentNode;
+  Object.values(order).forEach((orderProperty, index) =>{
+    currentRow.cells[index].innerHTML = orderProperty;
+  });
+};
+
+function deleteOrder(orderId){
+  orderList=orderList.filter(o=> o.orderId !== orderId);
+  var btn=document.getElementById('btn_' + orderId);
+  deleteRow(btn);
+};
+
+function deleteRow(btn) {
+ var row = btn.parentNode.parentNode;
+ row.parentNode.removeChild(row);
+};
 
 function calculateTotalAmount(amountBox, unitPriceBox, totalPriceBox, totalAllBox, deliveryOptions){
   if(!amountBox.value ||  !unitPriceBox.value)
    return;
    totalPriceBox.value = amountBox.value * unitPriceBox.value;
    addDeliveryFeeToTotal(totalAllBox,totalPriceBox, deliveryOptions);
-}
+};
 
 function itemNumber(itemNameBox, unitPriceBox, totalPriceBox, amountBox, totalAllBox, deliveryOptions){
   var i = itemNameBox.selectedIndex;
@@ -163,5 +251,3 @@ function addDeliveryFeeToTotal(totalAllBox, totalPriceBox, deliveryOptions){
 }
 
 init();
-
-
