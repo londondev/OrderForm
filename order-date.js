@@ -38,7 +38,7 @@ function init(){
         document.getElementById('orderDate').value = currentDate;
       }
     }
-  })
+  });
 
   itemNameBox.addEventListener('change', (event) => itemNumber(itemNameBox, unitPriceBox, totalPriceBox, amountBox, totalAllBox, deliveryOptions));
   
