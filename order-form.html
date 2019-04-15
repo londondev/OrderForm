@@ -29,9 +29,9 @@
     <label for="totalPrice" class="total-price">Total</label>
     <input id="totalPrice" readonly=true class="total-price"></label>
 
-    <input type="radio" name="delivery" checked value="standard">Standard(Free)<br />
-    <input type="radio" name="delivery" value="fast">Fast(£2.99)<br />
-    <input type="radio" name="delivery" value="express">Express(£4.99)<br />
+    <input type="radio" name="delivery" id="standard" checked value="standard">Standard(Free)<br />
+    <input type="radio" name="delivery" id="fast" value="fast">Fast(£2.99)<br />
+    <input type="radio" name="delivery" id="express" value="express">Express(£4.99)<br />
 
     <label for="totalAll" class="total-price-all">Total Include Delivery</label>
     <input id="totalAll" readonly=true class="total-price-all"></label>
@@ -52,6 +52,7 @@
       <th>Total</th>
       <th>Delivery Type</th>
       <th>Total All</th>
+      <th colspan="2">Actions</th>
     </tr>
 
   </table>

@@ -5,7 +5,7 @@ var deliveryFees = {
 };
 var orderList = [];
 var selectedDeliveryType;
-var inputFilled = false;
+var orderIdToEdit = null;
 
 function init() {
   var orderDateInput = document.getElementById("orderDate");
@@ -23,11 +23,8 @@ function init() {
   unitPriceBox.addEventListener("blur", event =>
     calculateTotalAmount(amountBox, unitPriceBox)
   );
-
   var radioButtons = document.getElementsByName("delivery");
-  radioButtons[0].checked = true;
-  selectedDeliveryType = radioButtons[0].value;
-  addDeliveryFeeToTotal(selectedDeliveryType);
+   selectedDeliveryType = radioButtons[0].value;
   radioButtons.forEach(radioButton => {
     radioButton.addEventListener("click", event =>
       addDeliveryFeeToTotal(event.target.value)
@@ -43,7 +40,50 @@ function init() {
   document.getElementById("unitPrice").value = document.getElementById(
     "itemName"
   ).value;
+
+  var table = document.getElementById("orderTable");
+  // var cellIndexes = table
+  // console.log("cell index", cellIndexes);
+
+  table.addEventListener("click", function(e) {
+    // console.log(e.target.cellIndex);
+    if (e.target.nodeName == "TH") {
+      // console.log(e)
+      sortTable(e.target.cellIndex);
+  }
+  });
 }
+function sortTable(n) {
+  var table, rows, x, y, shouldSwitch;
+  table = document.getElementById("orderTable");
+  rows = table.rows;
+  shouldSwitch = false;
+  switching = true;
+  // console.log("table", table);
+  // console.log("rows", rows);
+  // console.log("n", n);
+  while (switching) {
+    switching = false;
+    for (let i = 1; i < rows.length - 1; i++) {
+      // console.log('rows length',rows.length)
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      // console.log('x',x)
+      // console.log('y',y)
+      if (isNaN(x.innerHTML) ? x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() : Number(x.innerHTML) > Number(y.innerHTML) ) {
+        shouldSwitch = true;
+        }
+      
+      if (shouldSwitch) {
+        // console.log("parent node", rows[i].parentNode);
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        shouldSwitch = false;
+        switching = true;
+      }
+    }
+  }
+}
+
 
 function itemSelected(val) {
   document.getElementById("unitPrice").value = val;
@@ -56,8 +96,7 @@ function itemSelected(val) {
 }
 
 function orderSubmit() {
-  isPopulated();
-  if (inputFilled) {
+  if (!orderIdToEdit) {
     var newOrder = {
       orderId:
         orderList.length === 0
@@ -77,9 +116,19 @@ function orderSubmit() {
       totalAll: document.getElementById("totalAll").value
     };
     orderList.push(newOrder);
-    cleanForm();
     renderRow(newOrder);
+  } else {
+    var currentOrder = orderList.find(o => o.orderId === orderIdToEdit);
+    (currentOrder.orderDate = document.getElementById("orderDate").value),
+      (currentOrder.itemName = document.getElementById("itemName").value),
+      (currentOrder.amount = document.getElementById("amount").value),
+      (currentOrder.unitPrice = document.getElementById("unitPrice").value),
+      (currentOrder.totalPrice = document.getElementById("totalPrice").value),
+      currentOrder.selectedDeliveryType,
+      (currentOrder.totalAll = document.getElementById("totalAll").value);
+    updateRow(currentOrder);
   }
+  cleanForm();
 }
 
 function cleanForm() {
@@ -88,8 +137,19 @@ function cleanForm() {
     (document.getElementById("amount").value = ""),
     (document.getElementById("unitPrice").value = ""),
     (document.getElementById("totalPrice").value = ""),
-    (selectedDeliveryType = document.getElementsByName("delivery")[0].checked = true),
     (document.getElementById("totalAll").value = "");
+  document.getElementById("standard").checked = true;
+  selectedDeliveryType = "standard";
+}
+
+function populateForm(order) {
+  document.getElementById("orderDate").value = order.orderDate;
+  document.getElementById("itemName").value = order.itemName;
+  document.getElementById("amount").value = order.amount;
+  document.getElementById("unitPrice").value = order.unitPrice;
+  document.getElementById("totalPrice").value = order.totalPrice;
+  document.getElementById("totalAll").value = order.totalAll;
+  document.getElementById(order.selectedDeliveryType).checked = true;
 }
 
 function renderRow(newOrder) {
@@ -103,29 +163,40 @@ function renderRow(newOrder) {
     currentCell.innerHTML = val;
     cellIndex++;
   });
-
   currentCell = row.insertCell(cellIndex++);
   currentCell.innerHTML =
-    '<button id="btn_' +
+    '<button id="btn_delete' +
     newOrder.orderId +
     '" onclick="deleteOrder(' +
     newOrder.orderId +
     ')">Delete</button>';
   currentCell = row.insertCell(cellIndex++);
   currentCell.innerHTML =
-    '<button id="btn_' +
+    '<button id="btn_edit' +
     newOrder.orderId +
     '" onclick="editOrder(' +
     newOrder.orderId +
     ')">Edit</button>';
 }
 
-
+function updateRow(order) {
+  var editButon = document.getElementById("btn_edit" + order.orderId);
+  var currentRow = editButon.parentNode.parentNode;
+  Object.values(order).forEach((orderProperty, index) => {
+    currentRow.cells[index].innerHTML = orderProperty;
+  });
+}
 
 function deleteOrder(orderId) {
   orderList = orderList.filter(o => o.orderId !== orderId);
-  var btn = document.getElementById("btn_" + orderId);
+  var btn = document.getElementById("btn_delete" + orderId);
   deleteRow(btn);
+}
+
+function editOrder(orderId) {
+  var editOrder = orderList.find(o => o.orderId === orderId);
+  orderIdToEdit = orderId;
+  populateForm(editOrder);
 }
 
 function deleteRow(btn) {
@@ -133,31 +204,12 @@ function deleteRow(btn) {
   row.parentNode.removeChild(row);
 }
 
-function isPopulated() {
-  var emptyOrderDate = document.getElementById("emptyOrderDate");
-  var dateValue = document.getElementById("orderDate").value;
- 
-  var orderAmount = document.getElementById("orderAmount");
-  var amountValue = document.getElementById("amount").value
-  if (!dateValue) {
-    emptyOrderDate.style.display = "block";
-  } else {
-    emptyOrderDate.style.display = "none";
-  }
-  
-  if(!amountValue) {
-    orderAmount.style.display = "block";
-  } else {
-     orderAmount.style.display = "none";
-     inputFilled = true;
-  }  
-}
-
 function validateOrderDate() {
   var orderDateValidation = document.getElementById("invalidOrderDate");
   var dateValue = document.getElementById("orderDate").value;
   if (!isValidOrderDate(dateValue)) {
     orderDateValidation.style.display = "block";
+    document.getElementById("orderDate").focus();
   } else {
     orderDateValidation.style.display = "none";
   }
@@ -167,13 +219,14 @@ function calculateTotalAmount(amountBox, unitPriceBox) {
   if (!amountBox.value || !unitPriceBox.value) return;
   var totalPriceBox = document.getElementById("totalPrice");
   totalPriceBox.value = amountBox.value * unitPriceBox.value;
-  addDeliveryFeeToTotal(selectedDeliveryType);
+   addDeliveryFeeToTotal(selectedDeliveryType);
 }
 
 function addDeliveryFeeToTotal(deliveryType) {
   selectedDeliveryType = deliveryType;
   var totalAll = document.getElementById("totalAll");
   var totalPriceBox = document.getElementById("totalPrice");
+  if (!totalPriceBox.value) return;
   totalAll.value = (
     Number(totalPriceBox.value) + Number(deliveryFees[deliveryType])
   ).toFixed(2);
@@ -223,22 +276,7 @@ function createNewOrder() {
 
   orderList.push(newOrder);
 }
-function editOrder(orderId) {
-  var btn = document.getElementById("btn_" + orderId);
-  var row = btn.parentNode.parentNode;
-  var arr = row.cells[2].textContent;
 
-  console.log(arr);
-  document.getElementById("orderDate").value = row.cells[1].textContent;
-  document.getElementById("itemName").value = row.cells[2].textContent;
-  document.getElementById("amount").value = row.cells[3].textContent;
-  document.getElementById("unitPrice").value = row.cells[4].textContent;
-  document.getElementById("totalPrice").value = row.cells[5].textContent;
-  document.getElementById("totalAll").value = row.cells[7].textContent;
-  selectedDeliveryType = row.cells[6].textContent;
-  
-  deleteOrder(orderId);
-}
 /*
   homework:
  1- On submit, save order to array,
