@@ -49,7 +49,7 @@ function init(){
 
 };
 
-function validateOrderDate(){
+function orderSubmit(event){
     var orderDateValidation=document.getElementById('invalidOrderDate');
     var dateValue=document.getElementById('orderDate').value;
     if(!validateDate(dateValue)){
