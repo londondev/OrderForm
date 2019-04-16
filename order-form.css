@@ -295,6 +295,6 @@ span{
   background-color: #333;
 
 }
-#orderDateBtn{
+#orderDateBtn, #orderAmountBtn{
   cursor: pointer;
 }

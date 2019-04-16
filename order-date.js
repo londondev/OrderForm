@@ -6,6 +6,7 @@ var deliveryOptions = document.getElementsByName('delivery');
 var totalAllBox = document.getElementById('totalAll');
 var orderDateBox = document.getElementById('orderDate');
 
+
 var orderList=[];
 var selectedDeliveryType = function(){
   var result = '';
@@ -46,33 +47,6 @@ function init(){
 
   deliveryOptions.forEach(item=>item.addEventListener('click', (event) => addDeliveryFeeToTotal(totalAllBox, totalPriceBox, deliveryOptions)));
 
-  var orderDateBtn = document.getElementById('orderDateBtn');
-  orderDateBtn.addEventListener('click', function(){
-    var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("orderTable");
-    switching = true;
-  while (switching) {
-    switching = false;
-    rows = table.rows;
-    for (i = 1; i < (rows.length - 1); i++) {
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[1];
-      y = rows[i + 1].getElementsByTagName("TD")[1];
-
-      var date = x.innerHTML.split('/').reverse().join('');
-      var date1 = y.innerHTML.split('/').reverse().join('');
-   
-      if (date1 > date) {
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
-  });
 };
 
 function orderSubmit(event){
