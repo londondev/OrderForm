@@ -168,7 +168,6 @@ span{
   display: none;
 }
 
-<<<<<<< HEAD
 #invalidOrderDate{
   font-size: 20px;
   color: #0DFF92
@@ -299,38 +298,3 @@ span{
 #orderDateBtn, #orderAmountBtn{
   cursor: pointer;
 }
-=======
-thead {color:green;}
-tbody {color:blue;}
-tfoot {color:red;}
-
-
-#divTable{
-  margin-top: 30px;
-  width: 60%;
-}
-
-#orderTable {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-#orderTable td, #orderTable th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-#orderTable th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #4CAF50;
-  color: white;
-}
-
-#orderTable tr:nth-child(odd){
-  background-color:grey;
-  color: white;
-}
->>>>>>> 64c80776dda73f7157fdab6d21e948a730fb40ae
