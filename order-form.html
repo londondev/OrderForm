@@ -39,21 +39,21 @@
 
     <div id='divTable'></div>
       <table id='orderTable'>
-        
-          <tr>
-          <th>Order Id</th>
-          <th>Order Date</th>
-          <th>Item Name</th>
-          <th>Order Amount</th>
-          <th>Unit Price</th>
-          <th>Total</th>
-          <th>Delivery Type</th>
-          <th>Total All</th>
-          <th colspan="2">Actions</th>
+       <tr id='headerTr'>
+          <th data-sortBy='orderId'>Order Id</th>
+          <th data-sortBy='orderDate'>Order Date</th>
+          <th data-sortBy='itemName'>Item Name</th>
+          <th data-sortBy='amount'>Order Amount</th>
+          <th data-sortBy='unitPrice'>Unit Price</th>
+          <th data-sortBy='totalPrice'>Total</th>
+          <th data-sortBy="selectedDeliveryType" data-type='text'>Delivery Type</th>
+          <th data-sortBy="totalAll">Total All</th>
+          <th>Actions</th>
         </tr>
        
       </table>
     </div>
   </body>
+  <script src="./playground/sortOrder.js"></script>
   <script src="order-date.js"></script>
 </HTML>

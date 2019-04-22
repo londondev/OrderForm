@@ -1,4 +1,3 @@
-
  var deliveryFees={
    standard:0.0,
    fast:2.99,
@@ -7,6 +6,8 @@
  var orderList=[];
  var selectedDeliveryType;
  var orderIdToEdit=null;
+ var orderDirection=null;
+ var sortByField=null;
 
 function init(){
   var orderDateInput=document.getElementById('orderDate');
@@ -29,6 +30,48 @@ function init(){
   itemBox.addEventListener('change', (event) =>  itemSelected(event.target.value));
 
   document.getElementById('unitPrice').value=document.getElementById('itemName').value;
+
+  var headerTr=document.getElementById('headerTr');
+  headerTr.addEventListener('click', (event)=>sortOrders(event));
+}
+
+function sortOrders(event){
+  var sortBy=event.target.getAttribute('data-sortBy');
+  var dataType=event.target.getAttribute('data-type')
+  if(!sortBy)
+    return;
+  var sorter=new sortOrder(sortBy);
+  if(sortBy==='orderDate'){
+    return;
+  }else{
+    if(dataType==='text'){
+      if(sortByField===sortBy && orderDirection==='asc'){
+        orderList=orderList.sort(sorter.sortTextDesc);
+        orderDirection='desc'; 
+      }else{
+        orderList=orderList.sort(sorter.sortText);
+        orderDirection='asc';
+      }
+    }
+    else{
+      if(sortByField===sortBy && orderDirection==='asc'){
+        orderList=orderList.sort(sorter.sortNumberDesc);
+        orderDirection='desc';
+      }else{
+        orderList=orderList.sort(sorter.sortNumber);
+        orderDirection='asc'
+      }
+    }
+    sortByField=sortBy;
+    var table = document.getElementById('orderTable');
+    var rowArray=Array.from(table.rows);
+    rowArray.forEach((r,i) => {
+    if(i>0)
+      table.deleteRow(1);
+    });
+    orderList.forEach((o,i)=> renderRow(o,i + 1));
+  }
+
 }
 
 function itemSelected(val){
@@ -91,9 +134,10 @@ function populateForm(order){
   document.getElementById(order.selectedDeliveryType).checked=true;
 }
 
-function renderRow(newOrder){
+function renderRow(newOrder, orderIndex){
+    orderIndex=orderIndex===undefined ? orderList.length : orderIndex;
     var orderTable=document.getElementById('orderTable');
-    var row=orderTable.insertRow(orderList.length);
+    var row=orderTable.insertRow(orderIndex);
     var cellIndex=0;
     var currentCell;
  
