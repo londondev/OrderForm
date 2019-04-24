@@ -1,57 +1,31 @@
-function sortOrder(sortBy){
-  return{
-      sortText(a,b){
-          var x = a[sortBy].toString().toLowerCase();
-          var y = b[sortBy].toString().toLowerCase();
-          if (x < y) {return -1;}
-          if (x > y) {return 1;}
-          return 0;
-      },
-      sortTextDesc(a,b){
-          var x = a[sortBy].toString().toLowerCase();
-          var y = b[sortBy].toString().toLowerCase();
-          if (x > y) {return -1;}
-          if (x < y) {return 1;}
-          return 0;
-      },
-      sortNumber(a,b){
-        if (a[sortBy]< b[sortBy]) {return -1;}
-        if (a[sortBy] > b[sortBy]) {return 1;}
-        return 0;
-    },
-    sortNumberDesc(a,b){
-        if (a[sortBy]> b[sortBy]) {return -1;}
-        if (a[sortBy] < b[sortBy]) {return 1;}
-        return 0;
-    },
+var promise1 = new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    if(number>10)
+      reject('cannot enter more than 10');
+    else{
+      resolve('well done, you entered correct number', number);
+    }
+  }, 300);
+});
+var number=10;
+promise1
+.then(response=> console.log(response))
+.catch(err=> console.log('errored:', err));
 
-  }
+var region='London';
+axios.get('www.weather.com/region=' + region)
+.then(printWeather)
+.catch(handleError);
+
+function printWeather(weather){
+  console.log(weather);
+}
+
+function handleError(error){
+  console.log(error);
 }
 
 
 
-var orderList=[
-  {
-    orderId:1,
-    amount:5,
-    unitPrice:4,
-    total:20
-  },
-  {
-    orderId:2,
-    amount:4,
-    unitPrice:6,
-    total:24
-  },
-  {
-    orderId:3,
-    amount:1,
-    unitPrice:22,
-    total:22
-  },
-];
 
-var sortOrder=new sortOrder('unitPrice');
-var orderedList=orderList.sort(sortOrder.sortNumberDesc);
-console.log(orderedList);
 

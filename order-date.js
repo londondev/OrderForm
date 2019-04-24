@@ -66,7 +66,7 @@ function sortOrders(event){
     var table = document.getElementById('orderTable');
     var rowArray=Array.from(table.rows);
     rowArray.forEach((r,i) => {
-    if(i>0)
+    if(i>0 && i<orderList.length + 1)
       table.deleteRow(1);
     });
     orderList.forEach((o,i)=> renderRow(o,i + 1));
@@ -141,15 +141,37 @@ function renderRow(newOrder, orderIndex){
     var cellIndex=0;
     var currentCell;
  
-    Object.values(newOrder).forEach(val=>{
+    Object.keys(newOrder).forEach(key=>{
       currentCell=row.insertCell(cellIndex);
-      currentCell.innerHTML=val;
+      currentCell.innerHTML=newOrder[key];
+      if(key===sortByField)
+        currentCell.style.backgroundColor = 'red';
       cellIndex++;
     });
     currentCell=row.insertCell(cellIndex++);
     currentCell.innerHTML='<button id="btn_delete' + newOrder.orderId + '" onclick="deleteOrder(' + newOrder.orderId + ')">Delete</button>';
     currentCell=row.insertCell(cellIndex++);
     currentCell.innerHTML='<button id="btn_edit' + newOrder.orderId + '" onclick="editOrder(' + newOrder.orderId + ')">Edit</button>';
+
+    if(orderList.length===1){
+      addSummaryRow(newOrder.totalAll);
+    }else{
+      updateSummaryRow(orderList.reduce((prev, curr) => prev + Number(curr.totalAll),0));
+    }
+}
+
+function addSummaryRow(total){
+    var summaryRow=orderTable.insertRow(orderList.length + 1);
+    var cell=summaryRow.insertCell(0);
+    cell.colSpan="7";
+    var cellTotal=summaryRow.insertCell(1);
+    cellTotal.innerHTML=total;
+    cellTotal.colSpan="3";
+    cellTotal.id='summary';
+}
+
+function updateSummaryRow(total){
+  document.getElementById('summary').innerHTML=total;
 }
 
 function updateRow(order){
@@ -158,6 +180,8 @@ function updateRow(order){
   Object.values(order).forEach((orderProperty, index) =>{
     currentRow.cells[index].innerHTML = orderProperty;
   });
+
+  updateSummaryRow(orderList.reduce((prev, curr) => prev + Number(curr.totalAll),0))
 }
 
 function deleteOrder(orderId){
